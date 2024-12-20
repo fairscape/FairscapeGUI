@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://github.com/fairscape/fairscape-gui/instructions/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>GUI Instructions - FAIRSACPE GUI Client</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "GUI Instructions";
+        var mkdocs_page_input_path = "instructions.md";
+        var mkdocs_page_url = "/fairscape/fairscape-gui/instructions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> FAIRSACPE GUI Client
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../setup/">Setup</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">GUI Instructions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-getting-started-preparation-and-steps">1. Getting Started: Preparation and steps</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-initializing-an-ro-crate">2. Initializing an RO-Crate</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-registering-objects">3. Registering Objects</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-adding-metadata-to-objects">4. Adding Metadata to Objects</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-completing-object-registration">5. Completing Object Registration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-recording-computation">6. Recording Computation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-previewing-ro-crate-contents">7. Previewing RO-Crate Contents</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-table-view">1. Table View</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-json-ld-view">2. JSON-LD View</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-packaging-ro-crate">8. Packaging RO-Crate</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-uploading-ro-crate">9. Uploading RO-Crate</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">FAIRSACPE GUI Client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">GUI Instructions</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/fairscape/FairscapeFrontEnd/edit/master/docs/instructions.md">Edit on fairscape/fairscape-gui</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="step-by-step-tutorial-for-creating-and-publishing-an-ro-crate">Step-by-step tutorial for creating and publishing an RO-Crate</h1>
+<h2 id="1-getting-started-preparation-and-steps">1. Getting Started: Preparation and steps</h2>
+<p><img alt="Step 1" src="../screenshots/1.png" /></p>
+<p>The client interface contains five interactive steps for creating and publishing RO-Crates. Only authorized users are allowed to publish the RO-Crates to the FAIRSCAPE server after logging in. While RO-Crates can be created and packaged in a local machine in isolation, internet connection is required when a user is ready to connect to the server and publish them. Internet connection is required only when a user is ready to publish. The opening interface shows the following steps:</p>
+<ul>
+<li>Step 0: Prep Folder for RO-Crate Initialization</li>
+<li>Step 1: Initialize an RO-Crate</li>
+<li>Step 2: Register files in your RO-Crate</li>
+<li>Step 3: Review the contents of your RO-Crate</li>
+<li>Step 4: Package an RO-Crate for upload</li>
+<li>Step 5: Upload an RO-Crate</li>
+</ul>
+<p>Select any of these steps to begin the process. For creating a new RO-Crate, begin by moving all the data and software you'd like to package to a single folder (step 0).</p>
+<h2 id="2-initializing-an-ro-crate">2. Initializing an RO-Crate</h2>
+<p><img alt="Step 2" src="../screenshots/2.png" /></p>
+<p>To initialize a new RO-Crate:</p>
+<ol>
+<li>Provide the RO-Crate Path</li>
+<li>Enter the RO-Crate Name (e.g., Example Crate)</li>
+<li>Specify the organization name from the dropdown list</li>
+<li>Enter the Project Name (e.g., CM4AI)</li>
+<li>Provide a Description (e.g., Example Crate for Demo)</li>
+<li>Add relevant Keywords (e.g., test, demo, example)</li>
+</ol>
+<p>The right panel shows a preview of the metadata in JSON-LD format, which updates as you fill in the form.</p>
+<h2 id="3-registering-objects">3. Registering Objects</h2>
+<p><img alt="Step 3" src="../screenshots/3.png" /></p>
+<p>After initialization, a list of files will be available for registration in your RO-Crate. In this example, the files are:</p>
+<ul>
+<li>input_data.csv</li>
+<li>output_data.csv</li>
+<li>software.py</li>
+</ul>
+<p>Select a file to add metadata for each object.</p>
+<h2 id="4-adding-metadata-to-objects">4. Adding Metadata to Objects</h2>
+<p><img alt="Step 4" src="../screenshots/4.png" /></p>
+<p>For each file, the following set of metadata must be provided:</p>
+<ol>
+<li>Dataset Name (e.g., input data)</li>
+<li>Author (e.g., Smith John)</li>
+<li>Version (e.g., 1.0)</li>
+<li>Date Published (e.g., 10/17/2024)</li>
+<li>Description (e.g., Example Input Dataset)</li>
+<li>Keywords (e.g., test)</li>
+<li>Data Format (e.g., CSV)</li>
+</ol>
+<h2 id="5-completing-object-registration">5. Completing Object Registration</h2>
+<p><img alt="Step 5" src="../screenshots/5.png" /></p>
+<p>Once metadata are provided for all files:</p>
+<ol>
+<li>A green checkmark will appear next to each registered file</li>
+<li>Complete the registration step by clicking "Done Registering".</li>
+</ol>
+<h2 id="6-recording-computation">6. Recording Computation</h2>
+<p><img alt="Step 6" src="../screenshots/6.png" /></p>
+<p>To record a computation:</p>
+<ol>
+<li>Enter the Computation Name (e.g., Example Computation)</li>
+<li>Specify the Date Created (e.g., 10/17/2024)</li>
+<li>Provide the name of who Run By the computation (e.g., Smith John)</li>
+<li>Add relevant Keywords (e.g., python)</li>
+<li>Give a Description of the computation (e.g., Simple computation)</li>
+</ol>
+<p>There are 4 placeholders:</p>
+<ul>
+<li>Available Files (registered files only)</li>
+<li>Input Datasets</li>
+<li>Output Datasets</li>
+<li>Software Used</li>
+</ul>
+<p>Drag and drop files from the <code>Available Files</code> section to the appropriate categories.</p>
+<h2 id="7-previewing-ro-crate-contents">7. Previewing RO-Crate Contents</h2>
+<p><img alt="Step 7" src="../screenshots/7.png" /></p>
+<p>The <code>Review</code> step allows users to examine and verify all the metadata recorded in the previous steps. It offers two viewing options:</p>
+<h3 id="1-table-view">1. Table View</h3>
+<p>This view presents the RO-Crate contents in a tabular format with the following columns:</p>
+<ul>
+<li><strong>Name</strong>: Displays the name or title of each item in the RO-Crate</li>
+<li><strong>Status</strong>: Shows the current status of each item, typically "Registered" if properly added</li>
+<li><strong>Type</strong>: Indicates the type of content (e.g., dataset, file, person)</li>
+<li><strong>GUID</strong> (Globally Unique Identifier): Presents a unique identifier for each item</li>
+</ul>
+<h3 id="2-json-ld-view">2. JSON-LD View</h3>
+<p>This view shows the RO-Crate metadata in JSON-LD format. It provides:</p>
+<ul>
+<li>A machine-readable representation of the RO-Crate metadata</li>
+<li>Detailed semantic information about the relationships between items</li>
+</ul>
+<p>Users can switch between these views to gain different perspectives on their RO-Crate contents. Once satisfied with the review, users can proceed to the RO-Crate packaging step.</p>
+<h2 id="8-packaging-ro-crate">8. Packaging RO-Crate</h2>
+<p><img alt="Step 8" src="../screenshots/8.png" /></p>
+<p>To package your RO-Crate:</p>
+<ol>
+<li>Verify the RO-Crate Path is correct.</li>
+<li>To package the RO-Crate:</li>
+</ol>
+<h2 id="9-uploading-ro-crate">9. Uploading RO-Crate</h2>
+<p><img alt="Step 9" src="../screenshots/9.png" /></p>
+<p>Finally, to upload your packaged RO-Crate:</p>
+<ol>
+<li>Ensure you're logged in to the FAIRSCAPE ROCrate Repository.</li>
+<li>The packaged RO-Crate file name will be displayed (e.g., Test.zip).</li>
+<li>Click "Upload RO-Crate" to begin the upload process.</li>
+<li>Track the upload progress with the status bar!</li>
+</ol>
+<p>Congratulations! You've successfully created, packaged, and uploaded an RO-Crate to the FAIRSCAPE Repository. If you want to publish your RO-Crate to Dataverse visist this <a href="https://fairscape.github.io/FairscapeFrontEnd/publish/">page</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../setup/" class="btn btn-neutral float-left" title="Setup"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2024 THE RECTOR AND VISITORS OF THE UNIVERSITY OF VIRGINIA</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/fairscape/FairscapeFrontEnd" class="fa fa-code-fork" style="color: #fcfcfc"> fairscape/fairscape-gui</a>
+        </span>
+    
+    
+      <span><a href="../setup/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

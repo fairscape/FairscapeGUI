@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://github.com/fairscape/fairscape-gui/publish/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Publish - FAIRSACPE GUI Client</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Publish";
+        var mkdocs_page_input_path = "publish.md";
+        var mkdocs_page_url = "/fairscape/fairscape-gui/publish/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> FAIRSACPE GUI Client
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../setup/">Setup</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../instructions/">GUI Instructions</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">FAIRSACPE GUI Client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Publish</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/fairscape/FairscapeFrontEnd/edit/master/docs/publish.md">Edit on fairscape/fairscape-gui</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!-- markdownlint-disable -->
+
+<h1 id="publishing-rocrate-to-dataverse-a-step-by-step-guide">Publishing ROCrate to Dataverse: A Step-by-Step Guide</h1>
+<h2 id="1-generate-dataverse-api-token">1. Generate Dataverse API Token</h2>
+<p><img alt="Step 1" src="../screenshots/pub1.png" /></p>
+<ol>
+<li>Log in to your Dataverse account. <a href="https://dataverse.lib.virginia.edu/">UVA Dataverse</a></li>
+<li>Click on your username in the top right corner</li>
+<li>Select "API Token" from the dropdown menu</li>
+<li>Click "Create Token" if you don't have one already</li>
+<li>Copy the generated API token for future use</li>
+</ol>
+<h2 id="2-configure-fairscape-token-management">2. Configure Fairscape Token Management</h2>
+<p><img alt="Step 2" src="../screenshots/pub2.png" /></p>
+<ol>
+<li>Log in to Fairscape server <a href="https://fairscape.net/login">here</a></li>
+<li>Click "Manage Tokens" in the top navigation</li>
+<li>Fill in the required fields:<ul>
+<li>Token ID (e.g., "My UVA Dataverse Token")</li>
+<li>Endpoint URL (The Dataverse instance you are uploading to e.g.,"https://dataverse.uva.edu")</li>
+<li>Token Value (paste your Dataverse API token)</li>
+</ul>
+</li>
+<li>Click "ADD TOKEN" to save
+   <img alt="Step 3" src="../screenshots/pub3.png" /></li>
+</ol>
+<h2 id="3-navigate-to-ro-crate-publication">3. Navigate to RO-Crate Publication</h2>
+<p><img alt="Step 4" src="../screenshots/pub4.png" /></p>
+<ol>
+<li>Go to your ROCrate metadata page in Fairscape</li>
+<li>Click the "Publish ROCrate to Dataverse" button at the bottom of the page</li>
+</ol>
+<h2 id="4-complete-publication-form">4. Complete Publication Form</h2>
+<p><img alt="Step 5" src="../screenshots/pub5.png" />
+The required fields are auto-populated, but you can edit them as needed (marked with *):</p>
+<ol>
+<li>Select Dataverse Instance from the dropdown<ul>
+<li>Choose your configured Dataverse instance</li>
+</ul>
+</li>
+<li>Database Configuration:<ul>
+<li>Confirm Database Name (default: "libradata")</li>
+</ul>
+</li>
+<li>Publication Details:<ul>
+<li>Title*: Verify or update the ROCrate title</li>
+<li>Authors*: Edit/Add all relevant authors</li>
+<li>Description*: Review and update as needed</li>
+<li>Keywords*: Confirm or modify keywords</li>
+<li>Publication Date*: Verify the date is correct</li>
+</ul>
+</li>
+</ol>
+<h2 id="5-publish-rocrate">5. Publish ROCrate</h2>
+<ol>
+<li>Final Review:<ul>
+<li>Double-check all entered information</li>
+<li>Ensure all required fields are completed</li>
+<li>Verify Dataverse instance selection</li>
+</ul>
+</li>
+<li>Publication:<ul>
+<li>Click "Publish to Dataverse" button</li>
+<li>Wait for the publication process to complete</li>
+</ul>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2024 THE RECTOR AND VISITORS OF THE UNIVERSITY OF VIRGINIA</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/fairscape/FairscapeFrontEnd" class="fa fa-code-fork" style="color: #fcfcfc"> fairscape/fairscape-gui</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
