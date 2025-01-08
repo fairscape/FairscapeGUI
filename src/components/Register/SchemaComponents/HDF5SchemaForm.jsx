@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
-import { register_schema } from "../../../rocrate/rocrate";
+import { register_schema } from "@fairscape/utils";
 import { ipcRenderer } from "electron";
 import styled from "styled-components";
 import {

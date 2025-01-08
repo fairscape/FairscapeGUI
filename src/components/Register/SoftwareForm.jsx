@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import { register_software } from "../../rocrate/rocrate";
+import { register_software } from "@fairscape/utils";
 import path from "path";
 import {
   StyledForm,

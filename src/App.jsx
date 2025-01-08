@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import InitForm from "./components/InitForm";
 import FileSelector from "./components/Register/FileSelector";
 import ComputationForm from "./components/Register/ComputationForm";
-import Review from "./components/Review"; // Import the new Review component
+import Review from "./components/Review";
 import PackageForm from "./components/PackageForm";
 import UploadForm from "./components/UploadForm";
 import SidebarComponent from "./components/SideBar";

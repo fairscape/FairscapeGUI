@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { register_schema } from "../../../rocrate/rocrate";
+import { register_schema } from "@fairscape/utils";
 
 const Container = styled.div`
   background-color: #282828;

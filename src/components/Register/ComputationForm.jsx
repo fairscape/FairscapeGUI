@@ -5,7 +5,7 @@ import {
   register_computation,
   get_registered_files,
   get_ro_crate_metadata,
-} from "../../rocrate/rocrate";
+} from "@fairscape/utils";
 import {
   StyledForm,
   FormTitle,

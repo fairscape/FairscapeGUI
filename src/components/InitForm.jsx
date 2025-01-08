@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Modal } from "react-bootstrap";
-import { rocrate_create } from "../rocrate/rocrate";
+import { rocrate_create } from "@fairscape/utils";
 import { ipcRenderer } from "electron";
 import fs from "fs/promises";
 import styled from "styled-components";

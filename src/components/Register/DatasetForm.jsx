@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card } from "react-bootstrap";
-import { register_dataset } from "../../rocrate/rocrate";
+import { register_dataset } from "@fairscape/utils";
 import path from "path";
 import {
   StyledForm,
