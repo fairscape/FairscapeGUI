@@ -8,9 +8,7 @@ const {
   HDF5Schema,
   FileType,
 } = require("./src/models/tabularSchema.cjs");
-const {
-  generateEvidenceGraphs,
-} = require("./src/rocrate/evidence_graph_builder");
+const { generateEvidenceGraphs } = require("@fairscape/utils");
 
 function createWindow() {
   const win = new BrowserWindow({
