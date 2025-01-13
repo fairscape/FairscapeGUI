@@ -1,6 +1,6 @@
 {
   "name": "fairscape-rocrate-repository",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Electron app for creating ROCrates compatiable with FAIRSCAPE",
   "main": "main.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "build:prod": "webpack --config webpack.config.js --env ENVIRONMENT=production",
     "package": "npm run build:prod && electron-builder",
     "package:linux": "npm run build:prod && electron-builder --linux AppImage",
+    "package:mac": "npm run build:prod && electron-builder --mac",
     "dev": "webpack --config webpack.config.js --env ENVIRONMENT=development --watch & electron ."
   },
   "keywords": [],
@@ -56,14 +57,20 @@
     "webpack-cli": "^5.1.4"
   },
   "build": {
-    "appId": "com.fairscape.cli",
+    "appId": "edu.uva.fairscape.rocrate",
     "productName": "FAIRSCAPE",
     "mac": {
       "category": "public.app-category.developer-tools",
       "icon": "build/icon.icns",
       "target": [
-        "dmg"
-      ]
+        "dmg",
+        "zip"
+      ],
+      "identity": "FAIRSCAPE Developer",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "win": {
       "target": "nsis",

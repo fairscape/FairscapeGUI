@@ -172,6 +172,10 @@ const StatusTracker = ({ submissionUUID, uploadError, isUploading }) => {
       currentStep = 2;
       progress = 75;
       break;
+    case "finished":
+      currentStep = success ? 3 : -1;
+      progress = 100;
+      break;
     case "Finished":
       currentStep = success ? 3 : -1;
       progress = 100;
