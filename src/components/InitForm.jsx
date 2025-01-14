@@ -67,6 +67,45 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
+const LICENSE_OPTIONS = [
+  {
+    label: "CC BY 4.0",
+    value: "https://creativecommons.org/licenses/by/4.0/",
+  },
+  {
+    label: "CC BY-SA 4.0",
+    value: "https://creativecommons.org/licenses/by-sa/4.0/",
+  },
+  {
+    label: "CC BY-NC 4.0",
+    value: "https://creativecommons.org/licenses/by-nc/4.0/",
+  },
+  {
+    label: "CC BY-NC-SA 4.0",
+    value: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  },
+  {
+    label: "CC BY-ND 4.0",
+    value: "https://creativecommons.org/licenses/by-nd/4.0/",
+  },
+  {
+    label: "CC BY-NC-ND 4.0",
+    value: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+  },
+  {
+    label: "CC0 1.0",
+    value: "https://creativecommons.org/publicdomain/zero/1.0/",
+  },
+  {
+    label: "MIT License",
+    value: "https://opensource.org/licenses/MIT",
+  },
+  {
+    label: "Apache License 2.0",
+    value: "https://opensource.org/licenses/Apache-2.0",
+  },
+];
+
 const organizations = [
   { name: "UVA", guid: "ark:59852/organization-uva" },
   { name: "UCSD", guid: "ark:59852/organization-ucsd" },
@@ -99,6 +138,7 @@ function InitForm({ rocratePath, setRocratePath, onSuccess }) {
     keywords: "",
     packageType: "",
     author: "",
+    license: LICENSE_OPTIONS[0].value, // Default to CC BY 4.0
   });
 
   const [jsonLdPreview, setJsonLdPreview] = useState({});
@@ -126,7 +166,7 @@ function InitForm({ rocratePath, setRocratePath, onSuccess }) {
       .slice(0, 14);
     return `ark:${NAAN}/rocrate-${name
       .toLowerCase()
-      .replace(/\s+/g, "-")}-${sq}`;
+      .replace(/\s+/g, "-")}-${sq}/`;
   };
 
   const updateJsonLdPreview = () => {
@@ -144,6 +184,7 @@ function InitForm({ rocratePath, setRocratePath, onSuccess }) {
       description: formData.description,
       author: formData.author,
       packageType: formData.packageType,
+      license: formData.license,
       "@graph": [],
     };
 
@@ -200,16 +241,24 @@ function InitForm({ rocratePath, setRocratePath, onSuccess }) {
   const createROCrate = () => {
     const guid = generateGuid(formData.name);
     try {
+      const organization = organizations.find(
+        (org) => org.name === formData.organization_name
+      );
+      const project = projects.find(
+        (proj) => proj.name === formData.project_name
+      );
+
       const result = rocrate_create(
         rocratePath,
         formData.name,
-        formData.organization_name,
-        formData.project_name,
+        organization?.guid || null,
+        project?.guid || null,
         formData.description,
         formData.author,
         formData.keywords,
         formData.packageType,
-        guid
+        guid,
+        formData.license
       );
       console.log(result);
       onSuccess();
@@ -358,6 +407,21 @@ function InitForm({ rocratePath, setRocratePath, onSuccess }) {
                 required
                 placeholder="1st Author First Last, 2nd Author First Last, ..."
               />
+
+              <FormField
+                label="License"
+                name="license"
+                value={formData.license}
+                onChange={handleChange}
+                required
+                as="select"
+              >
+                {LICENSE_OPTIONS.map((license) => (
+                  <option key={license.value} value={license.value}>
+                    {license.label}
+                  </option>
+                ))}
+              </FormField>
 
               <FormField
                 label="Keywords"
