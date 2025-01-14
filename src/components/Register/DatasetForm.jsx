@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { register_dataset } from "@fairscape/utils";
 import path from "path";
 import {
@@ -9,148 +9,47 @@ import {
   FormField,
   TextAreaField,
   JsonLdPreview,
-  StyledFormGroup,
-  WhiteText,
 } from "./SharedComponents";
 import SchemaForm from "./SchemaComponents/SchemaForm";
 import SchemaUpload from "./SchemaComponents/SchemaUpload";
 import SchemaSelector from "./SchemaComponents/SchemaSelector";
 import HDF5SchemaForm from "./SchemaComponents/HDF5SchemaForm";
+import SchemaOptions from "./SchemaOptions";
+import { generateGuid, createJsonLdPreview } from "./Utils/datasetUtils";
+import { processDoiMetadata } from "./Utils/doiMetadataUtils";
+
+const initialFormState = {
+  name: "",
+  author: "",
+  version: "",
+  "date-published": "",
+  description: "",
+  keywords: "",
+  "data-format": "",
+  url: "",
+  "used-by": [],
+  "derived-from": [],
+  schema: "",
+  "associated-publication": "",
+  "additional-documentation": "",
+};
 
 function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    author: "",
-    version: "",
-    "date-published": "",
-    description: "",
-    keywords: "",
-    "data-format": "",
-    url: "",
-    "used-by": [],
-    "derived-from": [],
-    schema: "",
-    "associated-publication": "",
-    "additional-documentation": "",
-  });
-
+  const [formData, setFormData] = useState(initialFormState);
   const [jsonLdPreview, setJsonLdPreview] = useState({});
   const [showSchemaOptions, setShowSchemaOptions] = useState(false);
   const [showSchemaSelector, setShowSchemaSelector] = useState(false);
   const [showSchemaForm, setShowSchemaForm] = useState(false);
   const [showHDF5SchemaForm, setShowHDF5SchemaForm] = useState(false);
   const [showSchemaUpload, setShowSchemaUpload] = useState(false);
-  const [datasetRegistered, setDatasetRegistered] = useState(false);
   const [pendingRegistration, setPendingRegistration] = useState(false);
   const [schemaGuid, setSchemaGuid] = useState(null);
 
-  const schemaOptions = [
-    {
-      text: "Select Existing Schema",
-      action: "select",
-      description: "Choose from a list of pre-defined schemas.",
-    },
-    {
-      text: "Create New Schema",
-      action: "create",
-      description: "Define a custom schema for your dataset.",
-    },
-    {
-      text: "Upload Schema",
-      action: "upload",
-      description: "Upload a JSON schema file.",
-    },
-    {
-      text: "Skip Schema",
-      action: "skip",
-      description: "Continue without adding a schema to your dataset.",
-    },
-  ];
-
-  const generateGuid = (name) => {
-    const NAAN = "59852";
-    const sq = new Date()
-      .toISOString()
-      .replace(/[-:]/g, "")
-      .replace("T", "")
-      .slice(0, 14);
-    return `ark:${NAAN}/dataset-${name
-      .toLowerCase()
-      .replace(/\s+/g, "-")}-${sq}`;
-  };
-
-  const updateJsonLdPreview = (dataToPreview) => {
-    const guid = generateGuid(dataToPreview.name);
-    const preview = {
-      "@context": {
-        "@vocab": "https://schema.org/",
-        EVI: "https://w3id.org/EVI#",
-      },
-      "@id": guid,
-      "@type": "https://w3id.org/EVI#Dataset",
-      name: dataToPreview.name,
-      author: dataToPreview.author,
-      version: dataToPreview.version,
-      datePublished: dataToPreview["date-published"],
-      description: dataToPreview.description,
-      keywords: dataToPreview.keywords
-        ? dataToPreview.keywords.split(",").map((k) => k.trim())
-        : [],
-      format: dataToPreview["data-format"],
-      url: dataToPreview.url || undefined,
-      usedBy: dataToPreview["used-by"] || undefined,
-      derivedFrom: dataToPreview["derived-from"] || undefined,
-      schema: schemaGuid || undefined,
-      associatedPublication:
-        dataToPreview["associated-publication"] || undefined,
-      additionalDocumentation:
-        dataToPreview["additional-documentation"] || undefined,
-    };
-    setJsonLdPreview(preview);
-  };
-
   useEffect(() => {
     if (file === "doi" && doiMetadata) {
-      const newData = { ...formData };
-
-      if (doiMetadata.source === "CrossRef") {
-        const metadata = doiMetadata.metadata;
-        newData.name = metadata.title?.[0] || "";
-        newData.author =
-          metadata.author
-            ?.map((author) => `${author.given || ""} ${author.family || ""}`)
-            .join(", ") || "";
-        newData["date-published"] = metadata.published?.["date-parts"]?.[0]?.[0]
-          ? `${metadata.published["date-parts"][0][0]}-${String(
-              metadata.published["date-parts"][0][1] || 1
-            ).padStart(2, "0")}-${String(
-              metadata.published["date-parts"][0][2] || 1
-            ).padStart(2, "0")}`
-          : "";
-        newData.description = metadata.abstract || "";
-        newData.keywords = metadata.subject?.join(", ") || "";
-        newData["data-format"] = "DOI";
-        newData.url = `https://doi.org/${metadata.DOI}`;
-        newData.version = metadata.version || "";
-      } else if (doiMetadata.source === "DataCite") {
-        const metadata = doiMetadata.metadata.attributes;
-        newData.name = metadata.title || "";
-        newData.author =
-          metadata.author
-            ?.map((author) => `${author.given || ""} ${author.family || ""}`)
-            .join(", ") || "";
-        newData["date-published"] = metadata.published
-          ? `${metadata.published}-01-01`
-          : "";
-        newData.description = metadata.description || "";
-        newData.keywords = "";
-        newData["data-format"] = "DOI";
-        newData.url = metadata.url || `https://doi.org/${metadata.doi}`;
-        newData.version = metadata.version || "";
-      }
-
+      const newData = processDoiMetadata(doiMetadata);
       setFormData(newData);
-      updateJsonLdPreview(newData);
+      setJsonLdPreview(createJsonLdPreview(newData, schemaGuid));
     } else if (file !== "doi") {
       const fileName = path
         .basename(file, path.extname(file))
@@ -164,14 +63,14 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
       };
 
       setFormData(newData);
-      updateJsonLdPreview(newData);
+      setJsonLdPreview(createJsonLdPreview(newData, schemaGuid));
     }
   }, [file, doiMetadata]);
 
   const handleChange = (e) => {
     const newData = { ...formData, [e.target.name]: e.target.value };
     setFormData(newData);
-    updateJsonLdPreview(newData);
+    setJsonLdPreview(createJsonLdPreview(newData, schemaGuid));
   };
 
   const handleSubmit = (e) => {
@@ -203,7 +102,6 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
   };
 
   const handleSchemaRegistration = (schemaData) => {
-    console.log("Schema ID:", schemaData);
     setSchemaGuid(schemaData);
     registerDataset(schemaData);
   };
@@ -230,51 +128,12 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
       formData["additional-documentation"]
     );
     console.log(result);
-    setDatasetRegistered(true);
     setPendingRegistration(false);
-    setShowSchemaForm(false);
-    setShowSchemaSelector(false);
     onSuccess();
   };
 
   if (showSchemaOptions) {
-    return (
-      <StyledForm>
-        <FormTitle>Would you like to add a schema for this dataset?</FormTitle>
-        {schemaOptions.map((option, index) => (
-          <Card
-            key={index}
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#3e3e3e",
-              border: "1px solid #555",
-            }}
-          >
-            <Card.Body
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <Card.Title style={{ color: "#ffffff" }}>
-                  {option.text}
-                </Card.Title>
-                <Card.Text style={{ color: "#ffffff" }}>
-                  {option.description}
-                </Card.Text>
-              </div>
-              <StyledButton
-                onClick={() => handleSchemaOptionSelect(option.action)}
-              >
-                Select
-              </StyledButton>
-            </Card.Body>
-          </Card>
-        ))}
-      </StyledForm>
-    );
+    return <SchemaOptions onOptionSelect={handleSchemaOptionSelect} />;
   }
 
   if (showSchemaSelector) {
