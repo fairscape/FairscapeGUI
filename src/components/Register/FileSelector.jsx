@@ -137,18 +137,33 @@ function FileSelector({
     }
   };
 
+  const refreshRegisteredFiles = async () => {
+    try {
+      const result = await loadRoCrateFiles(rocratePath);
+      setRegisteredFiles(result.registeredFiles);
+    } catch (error) {
+      console.error("Error refreshing registered files:", error);
+    }
+  };
+
   if (selectedFile && fileType) {
     const FormComponent = fileType === "dataset" ? DatasetForm : SoftwareForm;
     return (
       <FormComponent
         file={selectedFile}
-        onBack={handleBack}
+        onBack={async () => {
+          await refreshRegisteredFiles();
+          handleBack();
+          setShowDoiInput(false);
+        }}
         rocratePath={rocratePath}
-        onSuccess={() => {
+        onSuccess={async () => {
+          await refreshRegisteredFiles();
           onFileRegister();
           setSelectedFile(null);
           setFileType(null);
           setDoiMetadata(null);
+          setShowDoiInput(false);
         }}
         doiMetadata={doiMetadata}
       />
@@ -211,7 +226,7 @@ function FileSelector({
                     </StyledListGroupItem>
                   ))}
                   <DoiListItem action onClick={() => setShowDoiInput(true)}>
-                    Register a dataset using an existing DOI.
+                    Register a publication or dataset using DOI...
                   </DoiListItem>
                 </StyledListGroup>
               )}
