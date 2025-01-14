@@ -66,92 +66,6 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
       description: "Continue without adding a schema to your dataset.",
     },
   ];
-  useEffect(() => {
-    if (file === "doi" && doiMetadata) {
-      if (doiMetadata.source === "CrossRef") {
-        const metadata = doiMetadata.metadata;
-        setFormData((prevState) => ({
-          ...prevState,
-          name: metadata.title?.[0] || "",
-          author:
-            metadata.author
-              ?.map((author) => `${author.given || ""} ${author.family || ""}`)
-              .join(", ") || "",
-          "date-published": metadata.published?.["date-parts"]?.[0]?.[0]
-            ? `${metadata.published["date-parts"][0][0]}-${String(
-                metadata.published["date-parts"][0][1] || 1
-              ).padStart(2, "0")}-${String(
-                metadata.published["date-parts"][0][2] || 1
-              ).padStart(2, "0")}`
-            : "",
-          description: metadata.abstract || "",
-          keywords: metadata.subject?.join(", ") || "",
-          "data-format": "DOI",
-          url: `https://doi.org/${metadata.DOI}`,
-          version: metadata.version || "",
-        }));
-      } else if (doiMetadata.source === "DataCite") {
-        const metadata = doiMetadata.metadata.attributes;
-        setFormData((prevState) => ({
-          ...prevState,
-          name: metadata.title || "",
-          author:
-            metadata.author
-              ?.map((author) => `${author.given || ""} ${author.family || ""}`)
-              .join(", ") || "",
-          "date-published": metadata.published
-            ? `${metadata.published}-01-01`
-            : "",
-          description: metadata.description || "",
-          keywords: [], 
-          "data-format": "DOI",
-          url: metadata.url || `https://doi.org/${metadata.doi}`,
-          version: metadata.version || "",
-        }));
-      }
-      const guid = generateGuid(FormData.name);
-      const preview = {
-        "@context": {
-          "@vocab": "https://schema.org/",
-          EVI: "https://w3id.org/EVI#",
-        },
-        "@id": guid,
-        "@type": "https://w3id.org/EVI#Dataset",
-        name: FormData.name,
-        author: FormData.author,
-        version: FormData.version,
-        datePublished: FormData["date-published"],
-        description: FormData.description,
-        keywords: FormData.keywords.split(",").map((k) => k.trim()),
-        format: FormData["data-format"],
-        url: FormData.url || undefined,
-        usedBy: FormData["used-by"] || undefined,
-        derivedFrom: FormData["derived-from"] || undefined,
-        schema: schemaGuid || undefined,
-        associatedPublication: FormData["associated-publication"] || undefined,
-        additionalDocumentation:
-          FormData["additional-documentation"] || undefined,
-      };
-      setJsonLdPreview(preview);
-    } else if (file !== "doi") {
-      const fileName = path
-        .basename(file, path.extname(file))
-        .replace(/_/g, " ");
-      const fileExtension = path.extname(file).slice(1).toUpperCase();
-
-      setFormData((prevState) => ({
-        ...prevState,
-        name: fileName,
-        "data-format": fileExtension,
-      }));
-    }
-
-    updateJsonLdPreview();
-  }, [file, doiMetadata]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const generateGuid = (name) => {
     const NAAN = "59852";
@@ -165,8 +79,8 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
       .replace(/\s+/g, "-")}-${sq}`;
   };
 
-  const updateJsonLdPreview = () => {
-    const guid = generateGuid(formData.name);
+  const updateJsonLdPreview = (dataToPreview) => {
+    const guid = generateGuid(dataToPreview.name);
     const preview = {
       "@context": {
         "@vocab": "https://schema.org/",
@@ -174,22 +88,90 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
       },
       "@id": guid,
       "@type": "https://w3id.org/EVI#Dataset",
-      name: formData.name,
-      author: formData.author,
-      version: formData.version,
-      datePublished: formData["date-published"],
-      description: formData.description,
-      keywords: formData.keywords.split(",").map((k) => k.trim()),
-      format: formData["data-format"],
-      url: formData.url || undefined,
-      usedBy: formData["used-by"] || undefined,
-      derivedFrom: formData["derived-from"] || undefined,
+      name: dataToPreview.name,
+      author: dataToPreview.author,
+      version: dataToPreview.version,
+      datePublished: dataToPreview["date-published"],
+      description: dataToPreview.description,
+      keywords: dataToPreview.keywords
+        ? dataToPreview.keywords.split(",").map((k) => k.trim())
+        : [],
+      format: dataToPreview["data-format"],
+      url: dataToPreview.url || undefined,
+      usedBy: dataToPreview["used-by"] || undefined,
+      derivedFrom: dataToPreview["derived-from"] || undefined,
       schema: schemaGuid || undefined,
-      associatedPublication: formData["associated-publication"] || undefined,
+      associatedPublication:
+        dataToPreview["associated-publication"] || undefined,
       additionalDocumentation:
-        formData["additional-documentation"] || undefined,
+        dataToPreview["additional-documentation"] || undefined,
     };
     setJsonLdPreview(preview);
+  };
+
+  useEffect(() => {
+    if (file === "doi" && doiMetadata) {
+      const newData = { ...formData };
+
+      if (doiMetadata.source === "CrossRef") {
+        const metadata = doiMetadata.metadata;
+        newData.name = metadata.title?.[0] || "";
+        newData.author =
+          metadata.author
+            ?.map((author) => `${author.given || ""} ${author.family || ""}`)
+            .join(", ") || "";
+        newData["date-published"] = metadata.published?.["date-parts"]?.[0]?.[0]
+          ? `${metadata.published["date-parts"][0][0]}-${String(
+              metadata.published["date-parts"][0][1] || 1
+            ).padStart(2, "0")}-${String(
+              metadata.published["date-parts"][0][2] || 1
+            ).padStart(2, "0")}`
+          : "";
+        newData.description = metadata.abstract || "";
+        newData.keywords = metadata.subject?.join(", ") || "";
+        newData["data-format"] = "DOI";
+        newData.url = `https://doi.org/${metadata.DOI}`;
+        newData.version = metadata.version || "";
+      } else if (doiMetadata.source === "DataCite") {
+        const metadata = doiMetadata.metadata.attributes;
+        newData.name = metadata.title || "";
+        newData.author =
+          metadata.author
+            ?.map((author) => `${author.given || ""} ${author.family || ""}`)
+            .join(", ") || "";
+        newData["date-published"] = metadata.published
+          ? `${metadata.published}-01-01`
+          : "";
+        newData.description = metadata.description || "";
+        newData.keywords = "";
+        newData["data-format"] = "DOI";
+        newData.url = metadata.url || `https://doi.org/${metadata.doi}`;
+        newData.version = metadata.version || "";
+      }
+
+      setFormData(newData);
+      updateJsonLdPreview(newData);
+    } else if (file !== "doi") {
+      const fileName = path
+        .basename(file, path.extname(file))
+        .replace(/_/g, " ");
+      const fileExtension = path.extname(file).slice(1).toUpperCase();
+
+      const newData = {
+        ...formData,
+        name: fileName,
+        "data-format": fileExtension,
+      };
+
+      setFormData(newData);
+      updateJsonLdPreview(newData);
+    }
+  }, [file, doiMetadata]);
+
+  const handleChange = (e) => {
+    const newData = { ...formData, [e.target.name]: e.target.value };
+    setFormData(newData);
+    updateJsonLdPreview(newData);
   };
 
   const handleSubmit = (e) => {
