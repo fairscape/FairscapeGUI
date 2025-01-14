@@ -17,7 +17,7 @@ import SchemaUpload from "./SchemaComponents/SchemaUpload";
 import SchemaSelector from "./SchemaComponents/SchemaSelector";
 import HDF5SchemaForm from "./SchemaComponents/HDF5SchemaForm";
 
-function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
+function DatasetForm({ file, onBack, rocratePath, onSuccess, doiMetadata }) {
   const [formData, setFormData] = useState({
     name: "",
     author: "",
@@ -67,21 +67,87 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
     },
   ];
   useEffect(() => {
-    const fileName = path.basename(file, path.extname(file)).replace(/_/g, " ");
-    const fileExtension = path.extname(file).slice(1).toUpperCase();
+    if (file === "doi" && doiMetadata) {
+      if (doiMetadata.source === "CrossRef") {
+        const metadata = doiMetadata.metadata;
+        setFormData((prevState) => ({
+          ...prevState,
+          name: metadata.title?.[0] || "",
+          author:
+            metadata.author
+              ?.map((author) => `${author.given || ""} ${author.family || ""}`)
+              .join(", ") || "",
+          "date-published": metadata.published?.["date-parts"]?.[0]?.[0]
+            ? `${metadata.published["date-parts"][0][0]}-${String(
+                metadata.published["date-parts"][0][1] || 1
+              ).padStart(2, "0")}-${String(
+                metadata.published["date-parts"][0][2] || 1
+              ).padStart(2, "0")}`
+            : "",
+          description: metadata.abstract || "",
+          keywords: metadata.subject?.join(", ") || "",
+          "data-format": "DOI",
+          url: `https://doi.org/${metadata.DOI}`,
+          version: metadata.version || "",
+        }));
+      } else if (doiMetadata.source === "DataCite") {
+        const metadata = doiMetadata.metadata.attributes;
+        setFormData((prevState) => ({
+          ...prevState,
+          name: metadata.title || "",
+          author:
+            metadata.author
+              ?.map((author) => `${author.given || ""} ${author.family || ""}`)
+              .join(", ") || "",
+          "date-published": metadata.published
+            ? `${metadata.published}-01-01`
+            : "",
+          description: metadata.description || "",
+          keywords: [], 
+          "data-format": "DOI",
+          url: metadata.url || `https://doi.org/${metadata.doi}`,
+          version: metadata.version || "",
+        }));
+      }
+      const guid = generateGuid(FormData.name);
+      const preview = {
+        "@context": {
+          "@vocab": "https://schema.org/",
+          EVI: "https://w3id.org/EVI#",
+        },
+        "@id": guid,
+        "@type": "https://w3id.org/EVI#Dataset",
+        name: FormData.name,
+        author: FormData.author,
+        version: FormData.version,
+        datePublished: FormData["date-published"],
+        description: FormData.description,
+        keywords: FormData.keywords.split(",").map((k) => k.trim()),
+        format: FormData["data-format"],
+        url: FormData.url || undefined,
+        usedBy: FormData["used-by"] || undefined,
+        derivedFrom: FormData["derived-from"] || undefined,
+        schema: schemaGuid || undefined,
+        associatedPublication: FormData["associated-publication"] || undefined,
+        additionalDocumentation:
+          FormData["additional-documentation"] || undefined,
+      };
+      setJsonLdPreview(preview);
+    } else if (file !== "doi") {
+      const fileName = path
+        .basename(file, path.extname(file))
+        .replace(/_/g, " ");
+      const fileExtension = path.extname(file).slice(1).toUpperCase();
 
-    setFormData((prevState) => ({
-      ...prevState,
-      name: fileName,
-      "data-format": fileExtension,
-    }));
+      setFormData((prevState) => ({
+        ...prevState,
+        name: fileName,
+        "data-format": fileExtension,
+      }));
+    }
 
     updateJsonLdPreview();
-  }, [file]);
-
-  useEffect(() => {
-    updateJsonLdPreview();
-  }, [formData, schemaGuid]);
+  }, [file, doiMetadata]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -137,10 +203,13 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
     if (action === "select") {
       setShowSchemaSelector(true);
     } else if (action === "create") {
-      // Check file extension for HDF5
-      const fileExtension = file.toLowerCase().split(".").pop();
-      if (fileExtension === "h5" || fileExtension === "hdf5") {
-        setShowHDF5SchemaForm(true);
+      if (file !== "doi") {
+        const fileExtension = file.toLowerCase().split(".").pop();
+        if (fileExtension === "h5" || fileExtension === "hdf5") {
+          setShowHDF5SchemaForm(true);
+        } else {
+          setShowSchemaForm(true);
+        }
       } else {
         setShowSchemaForm(true);
       }
@@ -159,7 +228,7 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
 
   const registerDataset = (schemaGuid = null) => {
     const guid = generateGuid(formData.name);
-    const fullFilePath = path.join(rocratePath, file);
+    const fullFilePath = file === "doi" ? "" : path.join(rocratePath, file);
     const result = register_dataset(
       rocratePath,
       formData.name,
@@ -247,6 +316,7 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
       />
     );
   }
+
   if (showHDF5SchemaForm) {
     return (
       <HDF5SchemaForm
@@ -258,6 +328,7 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
       />
     );
   }
+
   if (showSchemaUpload) {
     return (
       <SchemaUpload
@@ -270,7 +341,11 @@ function DatasetForm({ file, onBack, rocratePath, onSuccess }) {
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <FormTitle>Register Dataset: {file}</FormTitle>
+      <FormTitle>
+        {file === "doi"
+          ? "Register Publication/Dataset from DOI"
+          : `Register Dataset: ${file}`}
+      </FormTitle>
       <Row>
         <Col md={6}>
           <FormField
