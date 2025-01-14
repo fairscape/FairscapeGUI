@@ -37,13 +37,37 @@ function ComputationForm({ rocratePath, onComplete, onSkip }) {
   const [hasExistingComputations, setHasExistingComputations] = useState(false);
 
   const loadRegisteredFiles = async () => {
-    const files = await get_registered_files(rocratePath);
-    setAvailableFiles(files);
+    try {
+      // Get both local files and DOI references from the RO-Crate metadata
+      const metadata = await get_ro_crate_metadata(rocratePath);
+      const files = await get_registered_files(rocratePath);
+
+      const doiDatasets = metadata["@graph"]
+        .filter(
+          (item) =>
+            item["@type"] === "https://w3id.org/EVI#Dataset" &&
+            item.format === "DOI"
+        )
+        .map((dataset) => ({
+          guid: dataset["@id"],
+          name: dataset.name,
+          type: "doi",
+          url: dataset.url,
+        }));
+
+      const allFiles = [
+        ...files.map((file) => ({ ...file, type: "local" })),
+        ...doiDatasets,
+      ];
+
+      setAvailableFiles(allFiles);
+    } catch (error) {
+      console.error("Error loading files:", error);
+    }
   };
 
   const checkExistingComputations = async () => {
     const metadata = await get_ro_crate_metadata(rocratePath);
-    console.log(metadata);
     const computations = metadata["@graph"].filter(
       (item) => item["@type"] === "https://w3id.org/EVI#Computation"
     );
@@ -184,6 +208,24 @@ function ComputationForm({ rocratePath, onComplete, onSkip }) {
     onComplete();
   };
 
+  const renderFileItem = (file) => {
+    const displayName = file.type === "doi" ? `${file.name} (DOI)` : file.name;
+    return (
+      <StyledListItem
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "4px",
+        }}
+      >
+        <div>{displayName}</div>
+        {file.type === "doi" && file.url && (
+          <div style={{ fontSize: "0.8em", color: "#666" }}>{file.url}</div>
+        )}
+      </StyledListItem>
+    );
+  };
+
   const renderColumn = (columnId, columnName) => (
     <Droppable droppableId={columnId}>
       {(provided) => (
@@ -196,13 +238,13 @@ function ComputationForm({ rocratePath, onComplete, onSkip }) {
             ).map((file, index) => (
               <Draggable key={file.guid} draggableId={file.guid} index={index}>
                 {(provided) => (
-                  <StyledListItem
+                  <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
-                    {file.name}
-                  </StyledListItem>
+                    {renderFileItem(file)}
+                  </div>
                 )}
               </Draggable>
             ))}
